@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: checkmk
+  name: checkmk
+  namespace: checkmk
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: checkmk
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: checkmk
+    spec:
+      serviceAccount: checkmk
+      containers:
+      - image: registry.checkmk.com/enterprise/check-mk-enterprise:2.0.0p2
+        imagePullPolicy: IfNotPresent
+        name: checkmk
+        ports:
+        - containerPort: 5000
+          name: webport
+          protocol: TCP
+# To be implemented
+#        livenessProbe:
+#          httpGet:
+#            path: /
+#            port: 5000
+#        readinessProbe:
+#          httpGet:
+#            path: /
+#            port: 5000
+        resources: {}
+# To be implemented
+# limit:
+#   cpu: 
+#   memory:
+# request:
+#   cpu:
+#   memory:
+        env:
+        - name: CMK_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: checkmk
+              key: password
+        - name: CMK_SITE_ID
+          valueFrom:
+            configMapKeyRef:
+              name: checkmk
+              key: siteid
+        volumeMounts:
+          - mountPath: "/omd/sites"
+            name: checkmk-pv-storage
+      restartPolicy: Always
+      imagePullSecrets:
+      - name: pull-secret
+      securityContext: {}
+      volumes:
+# Requires a persistent volume
+        - name: checkmk-pv-storage
+          persistentVolumeClaim:
+            claimName: checkmk-pv-claim
+# In case no persistent volume available
+#        - name: omd
+#          emptyDir: {}

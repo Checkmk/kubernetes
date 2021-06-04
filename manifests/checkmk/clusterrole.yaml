@@ -1,0 +1,52 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: checkmk
+rules:
+- apiGroups:
+  - ""
+  - storage.k8s.io
+  - rbac.authorization.k8s.io
+  - apps
+  - extensions
+  - batch
+  - autoscaling
+  - networking.k8s.io/v1beta1
+  resources:
+  - componentstatuses
+  - nodes
+  - nodes/proxy
+  - services
+  - pods
+  - configmaps
+  - secrets
+  - resourcequotas
+  - replicationcontrollers
+  - limitranges
+  - persistentvolumeclaims
+  - persistentvolumes
+  - namespaces
+  - endpoints
+  - storageclasses
+  - clusterroles
+  - roles
+  - daemonsets
+  - deployments
+  - replicasets
+  - ingresses
+  - statefulsets
+  - cronjobs
+  - jobs
+  - horizontalpodautoscalers
+  verbs: ["get", "list"]
+- apiGroups:
+  - custom.metrics.k8s.io
+  resources: ["*"]
+  verbs:
+  - get
+  - list
+- nonResourceURLs:
+  - /version
+  - /healthz
+  - /metrics
+  verbs: ["get"]

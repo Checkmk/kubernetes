@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: checkmk
+  namespace: checkmk
+spec:
+  rules:
+    # Adapt to your own system
+    - host: monitoring.10.199.31.20.nip.io
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: checkmk
+              servicePort: 80

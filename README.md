@@ -6,7 +6,9 @@ Here you will find manifests for deploying Checkmk in Kubernetes!
 1) Download the manifests in Checkmk. 
 2) Create the dockerconfigjson for the Checkmk registry and add that to the _checkmk-server_secret-pull-credentials.yaml_
 3) kubectl apply -f .
+
 This will create a Checkmk site with the login credentials _cmkadmin // cmk_
+
 Requirements: You need a persistent volume in your cluster.
 
 ## Additional configuration options
@@ -17,6 +19,7 @@ You will likely have to adjust as well
 
 ## Help us improve this!
 K8s comes in many different shapes and colors. Thus, these manifests might not work completely for you.
+
 Please create a pull request with your recommendation and help us make this better.
 
 ## Next steps

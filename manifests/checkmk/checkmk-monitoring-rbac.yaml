@@ -1,3 +1,9 @@
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: checkmk
+  namespace: checkmk
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -50,3 +56,17 @@ rules:
   - /healthz
   - /metrics
   verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: checkmk
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: checkmk
+subjects:
+- kind: ServiceAccount
+  name: checkmk
+  namespace: checkmk
+  

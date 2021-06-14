@@ -31,7 +31,7 @@ Please create a pull request with your recommendation and help us make this bett
 We plan to provide helm charts in the future as well. 
 
 ## Support
-Check out the [Checkmk Forum] where people actively post suggestions for common problems. We also regularly check by, so feel free to make a post detailing your problem. 
+Check out the [Checkmk Forum] where people actively post suggestions for common problems. We also check back regularly, so feel free to make a post describing your problem.
 
 [checkmk repository]: https://github.com/tribe29/checkmk
 [Checkmk Forum]: https://forum.checkmk.com/

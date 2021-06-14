@@ -6,7 +6,7 @@ metadata:
 spec:
   rules:
     # Adapt to your own system
-    - host: monitoring.10.199.31.20.nip.io
+    - host: monitor.your.cluster
       http:
         paths:
           - path: /

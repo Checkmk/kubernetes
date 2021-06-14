@@ -6,6 +6,7 @@ metadata:
   name: checkmk
   namespace: checkmk
 spec:
+  # Multiple replicas are not supported at the moment
   replicas: 1
   selector:
     matchLabels:
@@ -20,14 +21,15 @@ spec:
     spec:
       serviceAccount: checkmk
       containers:
-      - image: registry.checkmk.com/enterprise/check-mk-enterprise:2.0.0p2
+      # For upadting Checkmk, just change the image. Don't downgrade between major versions
+      - image: registry.checkmk.com/enterprise/check-mk-enterprise:2.0.0p5
         imagePullPolicy: IfNotPresent
         name: checkmk
         ports:
         - containerPort: 5000
           name: webport
           protocol: TCP
-# To be implemented
+# Not supported at the moment
 #        livenessProbe:
 #          httpGet:
 #            path: /
@@ -36,14 +38,15 @@ spec:
 #          httpGet:
 #            path: /
 #            port: 5000
-        resources: {}
-# To be implemented
-# limit:
-#   cpu: 
-#   memory:
-# request:
-#   cpu:
-#   memory:
+        resources:
+# Not recommended to set
+#          limits:
+#            cpu:
+#            memory:
+          # Please adjust the requests to the size of your Checkmk instance. Rather increase then decrease the requests.
+          requests:
+            cpu: "2000m"
+            memory: "4Gi"
         env:
         - name: CMK_PASSWORD
           valueFrom:

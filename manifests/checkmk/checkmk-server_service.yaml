@@ -18,6 +18,5 @@ spec:
   selector:
     app: checkmk
   sessionAffinity: None
-#  type: LoadBalancer
   type: NodePort
-#  type: ClusterIP
+#  type: LoadBalancer

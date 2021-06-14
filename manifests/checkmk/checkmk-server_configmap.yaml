@@ -1,7 +1,9 @@
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: checkmk
   namespace: checkmk
 data:
+  # Set the name of the Checkmk site
   siteid: "checkmk"

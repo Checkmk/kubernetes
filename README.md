@@ -17,6 +17,9 @@ You will likely have to adjust as well
 - _checkmk-server_persistent-volume-claim.yaml_ (adapt to your PV set-up)
 - _checkmk-server_secret-site-credentials.yaml_ (for different log-in credentials)
 
+## Start monitoring K8s
+Follow the instructions on https://docs.checkmk.com/latest/en/monitoring_kubernetes.html
+
 ## Help us improve this!
 K8s comes in many different shapes and colors. Thus, these manifests might not work completely for you.
 

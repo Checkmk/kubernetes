@@ -1,6 +1,8 @@
 # Deploying Checkmk in Kubernetes 
-Ever wanted to set up Checkmk inside Kubernetes?
-Here you will find manifests for deploying Checkmk in Kubernetes!
+
+Checkmk - Your complete IT monitoring solution. Checkmk is available in several editions. The Checkmk Raw Edition is free and 100% open-source. The following information focuses on deploying Checkmk in a Kubernetes environment. You can check out our [checkmk repository] to find alternative installation methods.
+
+
 
 ## Getting started basics
 1) Download the manifests in Checkmk. 
@@ -27,3 +29,9 @@ Please create a pull request with your recommendation and help us make this bett
 
 ## Next steps
 We plan to provide helm charts in the future as well. 
+
+## Support
+Check out the [Checkmk Forum] where people actively post suggestions for common problems. We also regularly check by, so feel free to make a post detailing your problem. 
+
+[checkmk repository]: https://github.com/tribe29/checkmk
+[Checkmk Forum]: https://forum.checkmk.com/

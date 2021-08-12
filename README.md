@@ -5,7 +5,7 @@ Checkmk - Your complete IT monitoring solution. Checkmk is available in several 
 
 
 ## Getting started basics
-1) Download the manifests in Checkmk. 
+1) Download the manifests in the folder manifests/checkmk. 
 2) Create the dockerconfigjson for the Checkmk registry and add that to the _checkmk-server_secret-pull-credentials.yaml_
 3) kubectl apply -f .
 

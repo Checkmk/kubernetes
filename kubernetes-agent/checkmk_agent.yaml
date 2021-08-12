@@ -2,13 +2,13 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: checkmk
+  name: checkmk-monitoring
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: checkmk-internal
-  namespace: checkmk
+  namespace: checkmk-monitoring
   labels:
     run: checkmk-cluster-agent
 spec:
@@ -28,7 +28,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: checkmk-external
-  namespace: checkmk
+  namespace: checkmk-monitoring
   labels:
     run: checkmk-cluster-agent
 spec:
@@ -46,7 +46,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: checkmk-cluster-agent
-  namespace: checkmk
+  namespace: checkmk-monitoring
   labels:
     run: checkmk-cluster-agent
 spec:
@@ -89,7 +89,7 @@ metadata:
   labels:
     app: cadvisor
   name: cadvisor
-  namespace: checkmk
+  namespace: checkmk-monitoring
 ---
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
@@ -97,7 +97,6 @@ metadata:
   labels:
     app: cadvisor
   name: cadvisor
-  namespace: checkmk
 spec:
   allowedHostPaths:
   - pathPrefix: /
@@ -145,7 +144,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: cadvisor
-  namespace: default
+  namespace: checkmk-monitoring
 ---
 apiVersion: apps/v1
 kind: DaemonSet
@@ -154,7 +153,7 @@ metadata:
     seccomp.security.alpha.kubernetes.io/pod: docker/default
   labels:
     app: checkmk-worker-agent
-  namespace: checkmk
+  namespace: checkmk-monitoring
   name: checkmk-worker-agent
 spec:
   selector:

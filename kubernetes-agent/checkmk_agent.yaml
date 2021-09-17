@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: checkmk-monitoring
+  name: checkmk-monitoring-test
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -66,12 +66,13 @@ data:
     Vhemb2wv3JcVHqwZhF+M3MbuLU2THONmxZ+49OR90Or2hdBVPBTl3Qpif1XoEJxe
     UPVieRVyruzY5sWtPq5Qha6VNPm47xGw1vUqMo8arVd9mzFYAg4=
     -----END CERTIFICATE-----
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: checkmk-internal
-  namespace: checkmk-monitoring
+  namespace: checkmk-monitoring-test
   labels:
     app: checkmk-cluster-agent
 spec:
@@ -87,15 +88,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: checkmk-external
-  namespace: checkmk-monitoring
+  namespace: checkmk-monitoring-test
   labels:
     app: checkmk-cluster-agent
 spec:
   type: NodePort
   ports:
   - name: api
-    port: 30035
-    nodePort: 30035
+    port: 30039
+    nodePort: 30039
     targetPort: 10050
     protocol: TCP
   selector:
@@ -119,63 +120,66 @@ spec:
         app: checkmk-cluster-agent
     spec:
       containers:
-        - name: checkmk-cluster-agent
-          image: lisapichlertribe29/cluster_agent:0.3
-          imagePullPolicy: Always
-          env:
-            - name: NODE_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
-            - name: CMK_KEYPASS
-              valueFrom:
-                configMapKeyRef:
-                  name: checkmk-configmap
-                  key: cmk-keypass
-          volumeMounts:
-            - name: cmk-key
-              mountPath: /etc/ca-certificates/cmk-key.pam
-              subPath: cmk-key.pam
-            - name: cmk-cert
-              mountPath: /etc/ca-certificates/cmk-cert.pam
-              subPath: cmk-cert.pam
-          livenessProbe:
-            httpGet:
-              path: /
-              port: api
-              httpHeaders:
-                - name: status
-                  value: available
-              scheme: HTTPS
-            initialDelaySeconds: 3
-            periodSeconds: 3
-          command: ["python3"]
-          # For http, simply remove all arguments after "/app_server/api.py"
-          args: ["/app_server/api.py", "--ssl-keyfile", "/etc/ca-certificates/cmk-key.pam", "--ssl-keyfile-password", "$(CMK_KEYPASS)", "--ssl-certfile", "/etc/ca-certificates/cmk-cert.pam", "--secure-protocol"]
-          ports:
-            - containerPort: 10050
-              name: api
-              protocol: TCP
-          resources:
-            limits:
-              cpu: 300m
-              memory: 2000Mi
-            requests:
-              cpu: 150m
-              memory: 200Mi
-        volumes:
+      - name: checkmk-cluster-agent
+        image: lisapichlertribe29/cluster_agent:0.3
+        imagePullPolicy: Always
+        env:
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+          - name: CMK_KEYPASS
+            valueFrom:
+              configMapKeyRef:
+                name: checkmk-configmap
+                key: cmk-keypass
+        volumeMounts:
           - name: cmk-key
-            configMap:
-              name: checkmk-configmap
-              items:
-                - key: cmk-key
-                  path: cmk-key.pam
+            mountPath: /etc/ca-certificates/cmk-key.pam
+            subPath: cmk-key.pam
           - name: cmk-cert
-            configMap:
-              name: checkmk-configmap
-              items:
-                - key: cmk-cert
-                  path: cmk-cert.pam
+            mountPath: /etc/ca-certificates/cmk-cert.pam
+            subPath: cmk-cert.pam
+        livenessProbe:
+          httpGet:
+            path: /
+            port: api
+            httpHeaders:
+            - name: status
+              value: available
+            scheme: HTTPS
+          initialDelaySeconds: 3
+          periodSeconds: 3  # TODO: check at end of implementation
+                            # how often this is really needed.
+        command: ["python3"]
+        # For http, simply remove all arguments after "/app_server/api.py"
+        # NOTE: also modify scheme in liveness probe
+        args: ["/app_server/api.py", "--ssl-keyfile", "/etc/ca-certificates/cmk-key.pam", "--ssl-keyfile-password", "$(CMK_KEYPASS)", "--ssl-certfile", "/etc/ca-certificates/cmk-cert.pam", "--secure-protocol"]
+        ports:
+          - containerPort: 10050
+            name: api
+            protocol: TCP
+        resources:
+          limits:
+            cpu: 300m
+            memory: 2000Mi
+          requests:
+            cpu: 150m
+            memory: 200Mi
+      volumes:
+        - name: cmk-key
+          configMap:
+            name: checkmk-configmap
+            items:
+              - key: cmk-key
+                path: cmk-key.pam
+        - name: cmk-cert
+          configMap:
+            name: checkmk-configmap
+            items:
+              - key: cmk-cert
+                path: cmk-cert.pam
+
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -183,7 +187,7 @@ metadata:
   labels:
     app: cadvisor
   name: cadvisor
-  namespace: checkmk-monitoring
+  namespace: checkmk-monitoring-test
 ---
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
@@ -238,7 +242,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: cadvisor
-  namespace: checkmk-monitoring
+  namespace: checkmk-monitoring-test
 ---
 apiVersion: apps/v1
 kind: DaemonSet
@@ -248,7 +252,7 @@ metadata:
   labels:
     app: checkmk-worker-agent
   name: checkmk-worker-agent
-  namespace: checkmk-monitoring
+  namespace: checkmk-monitoring-test
 spec:
   selector:
     matchLabels:

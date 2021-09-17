@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: checkmk-monitoring-test
+  name: checkmk-monitoring
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -72,7 +72,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: checkmk-internal
-  namespace: checkmk-monitoring-test
+  namespace: checkmk-monitoring
   labels:
     app: checkmk-cluster-agent
 spec:
@@ -88,15 +88,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: checkmk-external
-  namespace: checkmk-monitoring-test
+  namespace: checkmk-monitoring
   labels:
     app: checkmk-cluster-agent
 spec:
   type: NodePort
   ports:
   - name: api
-    port: 30039
-    nodePort: 30039
+    port: 30035
+    nodePort: 30035
     targetPort: 10050
     protocol: TCP
   selector:
@@ -187,7 +187,7 @@ metadata:
   labels:
     app: cadvisor
   name: cadvisor
-  namespace: checkmk-monitoring-test
+  namespace: checkmk-monitoring
 ---
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
@@ -242,7 +242,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: cadvisor
-  namespace: checkmk-monitoring-test
+  namespace: checkmk-monitoring
 ---
 apiVersion: apps/v1
 kind: DaemonSet
@@ -252,7 +252,7 @@ metadata:
   labels:
     app: checkmk-worker-agent
   name: checkmk-worker-agent
-  namespace: checkmk-monitoring-test
+  namespace: checkmk-monitoring
 spec:
   selector:
     matchLabels:

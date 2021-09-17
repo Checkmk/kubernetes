@@ -48,3 +48,8 @@ For the individual test file, the main function should be called using the appro
 service port). Calling the file should output the collected pod metrics from all worker nodes. The yaml will create 
 the namespace checkmk-monitoring-test instead checkmk-monitoring. After completing the test, feel free to delete 
 namespace.
+
+
+**IMPORTANT**: We recommend that you delete the namespace (or at least the cluster agent) after finishing testing and simply redeploy the 
+setup when you want to retest. The cluster agent continuously collects the metrics from the worker nodes and will therefore increase the 
+space occupied on your FS when you don't query your metrics (this won't be a problem in the production setup later).

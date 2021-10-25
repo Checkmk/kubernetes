@@ -1,78 +1,82 @@
-# This is purely for testing purposes! Do not use in production environments
+# This is purely for testing purposes. Do not use a production cluster
+---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: checkmk-monitoring
+  name: checkmk-monitoring-streaming
 ---
 apiVersion: v1
-kind: ConfigMap
+kind: Secret
 metadata:
-  name: checkmk-configmap
-  namespace: checkmk-monitoring
+  name: checkmk-secret
+  namespace: checkmk-monitoring-streaming
 data:
+  # Secret must be a base64 decrypt string use echo -n "STRING" | base64 do get it
   cmk-key: |
-    -----BEGIN PRIVATE KEY-----
-    MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDt+r/1xWWM6b82
-    LyQDhYhcWGnyjCrkq7JPqwzknpKutv31pMFOg8p6ymw1NBV+PLkt6GmRFBj0HAdD
-    bRb2Gc+Io9hfLZxbUQRq4lmPQzm+5EJJumeJr2AchIAxaxoTUZWnZGQ21MludN9D
-    SDcUohGFcoswd6ekckTGIunhZUuAu41RC0dFWEqQwVDnMJ2oS7Scqp5F0lRDFfUT
-    fT/mqAN+v4hBf57cpXVgBv+DOFkCg0lcqOVgRdRVkifXo/hkhqxvBpWxRJYpY2UD
-    POJh/qy83UXDbhf1vuKhSpKbYGkVdWmn/Lt2fOukuoRkC5IF/XNf9MsXgRLot+p3
-    KAHMX3e1AgMBAAECggEBALoERWX7vSwPTfoxkOn7x6G/Lll7vM9vcfqaDoLpfGh6
-    +zm2Za9UjsG6ViikJKS/HFRJFbNkTTkKa5cFv2vwsurwf2GuSkiKpHRTp4O3HX0b
-    +MCepu3Vmr/PxlBaklBFdkAY1ciSPT1Mt3NlEEDdieqQpUHmVbDR7PYfNkeLoR/m
-    eGbmdotK6fRJIcJzUwgmjI0aB1B6Nb3gJYnRmRYyJNPcdNZq4yd61NjA+APyb5xj
-    ZXoDJgwg54cZBJaY/xrKbgmXDlhKpl9uprtTgfAStb2F0ZtZ1hO0i6qkWc3m0frM
-    TKIXaT3rfxFeh8pP8K7BPvGCL4Il7BLoFe5UvF7x/EUCgYEA+PSmBzE3anzGbzds
-    APR2n1ZbkjJqGuLl2vZDBUbzJU4Ie1Warg2Qpbmj0uHTxGH5FonCVdbqUu4GObjW
-    7LR/QBecIetL7KjCNRKfKpO524atw7N/Wn852oded/+d02rPf92CIHDUYDbRf85r
-    ZzrtQQgHzGKH4nmuuNdSBNPoBvcCgYEA9LaX92IYUtYm9UdB+T3FjsrUvA4zxpNq
-    m+0G9iVf97OqIPi1e5qYE0V4LKaeLWrbrR4HI2HX8QusHWCX5Sn7ZTmhjbKqoou0
-    JDYRecKzoTX3yCOx57AgTEOuH9grjMSocdtzI0iZcVLi8LiCM/cD9GHihn+nhCKs
-    5fjgJ3/u77MCgYB41T20ZfXwsIkbt/mq6PyeT6r4ZZHMZO6NfVOAPzSKmbpSKnV+
-    H0ViupzCISvIuIjOoKR7R2nKQI8y+v0OPHk64Xq9l9ftEOfaHKS2ZKcj3tV+FCQv
-    B2tMHsICWkX/NGtsM1YSatEZteGvN8A3hYlcNAqc8AHmMYtVWeUMRNHsdwKBgATq
-    6nDhOsXnYc8KCIxermqpLs88pdO2wKyzfbFSnPQYWzHgbZ03RRkWC00yZ/lXrWR0
-    NwaB/9nrNyE8ALFtP40QNGvpjD5J+mvD3mQJAp0ZvYn7FacnRe7iaUxghreEeDIZ
-    i93IprS9Sqw1uQAcVasCkI/NXutr2vegIbkJfB67AoGBAPeUn64rjkWNQuoIVpsW
-    Ex3LKNL9m4MYV/86y85QmbbVXuHrd24mTL03yDY82lgWVtN4nECNjz6pTyO5b+gE
-    H7jUFVig1mlJQUI49CFdc7Hr81XBf4IpRbaHeiRAcKeQmIzTfiSzXDTLV5/GCWIp
-    BXIp+vaSzyhzZdK+NE6yXaUp
-    -----END PRIVATE KEY-----
-
-  cmk-keypass: checkmk
+    LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2Z0lCQURBTkJna3Foa2lHOXcwQkFRRUZB
+    QVNDQktnd2dnU2tBZ0VBQW9JQkFRRHQrci8xeFdXTTZiODIKTHlRRGhZaGNXR255akNya3E3SlBx
+    d3prbnBLdXR2MzFwTUZPZzhwNnltdzFOQlYrUExrdDZHbVJGQmowSEFkRApiUmIyR2MrSW85aGZM
+    WnhiVVFScTRsbVBRem0rNUVKSnVtZUpyMkFjaElBeGF4b1RVWlduWkdRMjFNbHVkTjlEClNEY1Vv
+    aEdGY29zd2Q2ZWtja1RHSXVuaFpVdUF1NDFSQzBkRldFcVF3VkRuTUoyb1M3U2NxcDVGMGxSREZm
+    VVQKZlQvbXFBTit2NGhCZjU3Y3BYVmdCditET0ZrQ2cwbGNxT1ZnUmRSVmtpZlhvL2hraHF4dkJw
+    V3hSSllwWTJVRApQT0poL3F5ODNVWERiaGYxdnVLaFNwS2JZR2tWZFdtbi9MdDJmT3VrdW9Sa0M1
+    SUYvWE5mOU1zWGdSTG90K3AzCktBSE1YM2UxQWdNQkFBRUNnZ0VCQUxvRVJXWDd2U3dQVGZveGtP
+    bjd4NkcvTGxsN3ZNOXZjZnFhRG9McGZHaDYKK3ptMlphOVVqc0c2Vmlpa0pLUy9IRlJKRmJOa1RU
+    a0thNWNGdjJ2d3N1cndmMkd1U2tpS3BIUlRwNE8zSFgwYgorTUNlcHUzVm1yL1B4bEJha2xCRmRr
+    QVkxY2lTUFQxTXQzTmxFRURkaWVxUXBVSG1WYkRSN1BZZk5rZUxvUi9tCmVHYm1kb3RLNmZSSklj
+    SnpVd2dtakkwYUIxQjZOYjNnSlluUm1SWXlKTlBjZE5acTR5ZDYxTmpBK0FQeWI1eGoKWlhvREpn
+    d2c1NGNaQkphWS94cktiZ21YRGxoS3BsOXVwcnRUZ2ZBU3RiMkYwWnRaMWhPMGk2cWtXYzNtMGZy
+    TQpUS0lYYVQzcmZ4RmVoOHBQOEs3QlB2R0NMNElsN0JMb0ZlNVV2Rjd4L0VVQ2dZRUErUFNtQnpF
+    M2FuekdiemRzCkFQUjJuMVpia2pKcUd1TGwydlpEQlViekpVNEllMVdhcmcyUXBibWowdUhUeEdI
+    NUZvbkNWZGJxVXU0R09ialcKN0xSL1FCZWNJZXRMN0tqQ05SS2ZLcE81MjRhdHc3Ti9Xbjg1Mm9k
+    ZWQvK2QwMnJQZjkyQ0lIRFVZRGJSZjg1cgpaenJ0UVFnSHpHS0g0bm11dU5kU0JOUG9CdmNDZ1lF
+    QTlMYVg5MklZVXRZbTlVZEIrVDNGanNyVXZBNHp4cE5xCm0rMEc5aVZmOTdPcUlQaTFlNXFZRTBW
+    NExLYWVMV3JiclI0SEkySFg4UXVzSFdDWDVTbjdaVG1oamJLcW9vdTAKSkRZUmVjS3pvVFgzeUNP
+    eDU3QWdURU91SDlncmpNU29jZHR6STBpWmNWTGk4TGlDTS9jRDlHSGlobituaENLcwo1ZmpnSjMv
+    dTc3TUNnWUI0MVQyMFpmWHdzSWtidC9tcTZQeWVUNnI0WlpITVpPNk5mVk9BUHpTS21icFNLblYr
+    CkgwVml1cHpDSVN2SXVJak9vS1I3UjJuS1FJOHkrdjBPUEhrNjRYcTlsOWZ0RU9mYUhLUzJaS2Nq
+    M3RWK0ZDUXYKQjJ0TUhzSUNXa1gvTkd0c00xWVNhdEVadGVHdk44QTNoWWxjTkFxYzhBSG1NWXRW
+    V2VVTVJOSHNkd0tCZ0FUcQo2bkRoT3NYblljOEtDSXhlcm1xcExzODhwZE8yd0t5emZiRlNuUFFZ
+    V3pIZ2JaMDNSUmtXQzAweVovbFhyV1IwCk53YUIvOW5yTnlFOEFMRnRQNDBRTkd2cGpENUorbXZE
+    M21RSkFwMFp2WW43RmFjblJlN2lhVXhnaHJlRWVESVoKaTkzSXByUzlTcXcxdVFBY1Zhc0NrSS9O
+    WHV0cjJ2ZWdJYmtKZkI2N0FvR0JBUGVVbjY0cmprV05RdW9JVnBzVwpFeDNMS05MOW00TVlWLzg2
+    eTg1UW1iYlZYdUhyZDI0bVRMMDN5RFk4MmxnV1Z0TjRuRUNOano2cFR5TzViK2dFCkg3alVGVmln
+    MW1sSlFVSTQ5Q0ZkYzdIcjgxWEJmNElwUmJhSGVpUkFjS2VRbUl6VGZpU3pYRFRMVjUvR0NXSXAK
+    QlhJcCt2YVN6eWh6WmRLK05FNnlYYVVwCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0=
+  cmk-keypass: Y2hlY2ttaw==
   cmk-cert: |
-    -----BEGIN CERTIFICATE-----
-    MIIEEjCCAvqgAwIBAgIUPgYG9AwbRZsvppMV1oj8/Lq824IwDQYJKoZIhvcNAQEL
-    BQAwgacxCzAJBgNVBAYTAkRFMQ8wDQYDVQQIDAZCYXllcm4xETAPBgNVBAcMCE11
-    ZW5jaGVuMRUwEwYDVQQKDAx0cmliZTI5IEdtYkgxCzAJBgNVBAsMAklUMS8wLQYJ
-    KoZIhvcNAQkBFiB3ZWJtYXN0ZXJAY21rLjEwLjIwMC4zLjIwLm5pcC5pbzEfMB0G
-    A1UEAwwWY21rLjEwLjIwMC4zLjIwLm5pcC5pbzAeFw0yMTA5MTQxMTE2MDBaFw0y
-    NDA5MTMxMTE2MDBaMIGnMQswCQYDVQQGEwJERTEPMA0GA1UECAwGQmF5ZXJuMREw
-    DwYDVQQHDAhNdWVuY2hlbjEVMBMGA1UECgwMdHJpYmUyOSBHbWJIMQswCQYDVQQL
-    DAJJVDEvMC0GCSqGSIb3DQEJARYgd2VibWFzdGVyQGNtay4xMC4yMDAuMy4yMC5u
-    aXAuaW8xHzAdBgNVBAMMFmNtay4xMC4yMDAuMy4yMC5uaXAuaW8wggEiMA0GCSqG
-    SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDt+r/1xWWM6b82LyQDhYhcWGnyjCrkq7JP
-    qwzknpKutv31pMFOg8p6ymw1NBV+PLkt6GmRFBj0HAdDbRb2Gc+Io9hfLZxbUQRq
-    4lmPQzm+5EJJumeJr2AchIAxaxoTUZWnZGQ21MludN9DSDcUohGFcoswd6ekckTG
-    IunhZUuAu41RC0dFWEqQwVDnMJ2oS7Scqp5F0lRDFfUTfT/mqAN+v4hBf57cpXVg
-    Bv+DOFkCg0lcqOVgRdRVkifXo/hkhqxvBpWxRJYpY2UDPOJh/qy83UXDbhf1vuKh
-    SpKbYGkVdWmn/Lt2fOukuoRkC5IF/XNf9MsXgRLot+p3KAHMX3e1AgMBAAGjNDAy
-    MDAGA1UdEQQpMCeCGCouY21rLjEwLjIwMC4zLjIwLm5pcC5pb4ILMTAuMjAwLjMu
-    MjAwDQYJKoZIhvcNAQELBQADggEBAJHm5KZ3sOokOylTupOyzyAeOSlBVWKz1JtD
-    gnbFRi+dLEC663huPMAA95640DcE+4d+cKmWvCIB6gSjzG5Y9Xe88w03yydb/XsL
-    GUaUL/m+4P9Vy6vmCCb6slMD/JoInHki4vEik0CgBhQ1WTtRotP6Q1+GcmQjXmx6
-    MtMv9VqOC3JMz1hWOwvFz9RxFNBb3MZhFQeuk2qRPjWXBHGXqDHt4VnwDlAEhniF
-    Vhemb2wv3JcVHqwZhF+M3MbuLU2THONmxZ+49OR90Or2hdBVPBTl3Qpif1XoEJxe
-    UPVieRVyruzY5sWtPq5Qha6VNPm47xGw1vUqMo8arVd9mzFYAg4=
-    -----END CERTIFICATE-----
-
+    LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVFakNDQXZxZ0F3SUJBZ0lVUGdZRzlBd2JS
+    WnN2cHBNVjFvajgvTHE4MjRJd0RRWUpLb1pJaHZjTkFRRUwKQlFBd2dhY3hDekFKQmdOVkJBWVRB
+    a1JGTVE4d0RRWURWUVFJREFaQ1lYbGxjbTR4RVRBUEJnTlZCQWNNQ0UxMQpaVzVqYUdWdU1SVXdF
+    d1lEVlFRS0RBeDBjbWxpWlRJNUlFZHRZa2d4Q3pBSkJnTlZCQXNNQWtsVU1TOHdMUVlKCktvWklo
+    dmNOQVFrQkZpQjNaV0p0WVhOMFpYSkFZMjFyTGpFd0xqSXdNQzR6TGpJd0xtNXBjQzVwYnpFZk1C
+    MEcKQTFVRUF3d1dZMjFyTGpFd0xqSXdNQzR6TGpJd0xtNXBjQzVwYnpBZUZ3MHlNVEE1TVRReE1U
+    RTJNREJhRncweQpOREE1TVRNeE1URTJNREJhTUlHbk1Rc3dDUVlEVlFRR0V3SkVSVEVQTUEwR0Ex
+    VUVDQXdHUW1GNVpYSnVNUkV3CkR3WURWUVFIREFoTmRXVnVZMmhsYmpFVk1CTUdBMVVFQ2d3TWRI
+    SnBZbVV5T1NCSGJXSklNUXN3Q1FZRFZRUUwKREFKSlZERXZNQzBHQ1NxR1NJYjNEUUVKQVJZZ2Qy
+    VmliV0Z6ZEdWeVFHTnRheTR4TUM0eU1EQXVNeTR5TUM1dQphWEF1YVc4eEh6QWRCZ05WQkFNTUZt
+    TnRheTR4TUM0eU1EQXVNeTR5TUM1dWFYQXVhVzh3Z2dFaU1BMEdDU3FHClNJYjNEUUVCQVFVQUE0
+    SUJEd0F3Z2dFS0FvSUJBUUR0K3IvMXhXV002YjgyTHlRRGhZaGNXR255akNya3E3SlAKcXd6a25w
+    S3V0djMxcE1GT2c4cDZ5bXcxTkJWK1BMa3Q2R21SRkJqMEhBZERiUmIyR2MrSW85aGZMWnhiVVFS
+    cQo0bG1QUXptKzVFSkp1bWVKcjJBY2hJQXhheG9UVVpXblpHUTIxTWx1ZE45RFNEY1VvaEdGY29z
+    d2Q2ZWtja1RHCkl1bmhaVXVBdTQxUkMwZEZXRXFRd1ZEbk1KMm9TN1NjcXA1RjBsUkRGZlVUZlQv
+    bXFBTit2NGhCZjU3Y3BYVmcKQnYrRE9Ga0NnMGxjcU9WZ1JkUlZraWZYby9oa2hxeHZCcFd4UkpZ
+    cFkyVURQT0poL3F5ODNVWERiaGYxdnVLaApTcEtiWUdrVmRXbW4vTHQyZk91a3VvUmtDNUlGL1hO
+    ZjlNc1hnUkxvdCtwM0tBSE1YM2UxQWdNQkFBR2pOREF5Ck1EQUdBMVVkRVFRcE1DZUNHQ291WTIx
+    ckxqRXdMakl3TUM0ekxqSXdMbTVwY0M1cGI0SUxNVEF1TWpBd0xqTXUKTWpBd0RRWUpLb1pJaHZj
+    TkFRRUxCUUFEZ2dFQkFKSG01S1ozc09va095bFR1cE95enlBZU9TbEJWV0t6MUp0RApnbmJGUmkr
+    ZExFQzY2M2h1UE1BQTk1NjQwRGNFKzRkK2NLbVd2Q0lCNmdTanpHNVk5WGU4OHcwM3l5ZGIvWHNM
+    CkdVYVVML20rNFA5Vnk2dm1DQ2I2c2xNRC9Kb0luSGtpNHZFaWswQ2dCaFExV1R0Um90UDZRMStH
+    Y21RalhteDYKTXRNdjlWcU9DM0pNejFoV093dkZ6OVJ4Rk5CYjNNWmhGUWV1azJxUlBqV1hCSEdY
+    cURIdDRWbndEbEFFaG5pRgpWaGVtYjJ3djNKY1ZIcXdaaEYrTTNNYnVMVTJUSE9ObXhaKzQ5T1I5
+    ME9yMmhkQlZQQlRsM1FwaWYxWG9FSnhlClVQVmllUlZ5cnV6WTVzV3RQcTVRaGE2Vk5QbTQ3eEd3
+    MXZVcU1vOGFyVmQ5bXpGWUFnND0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQ==
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: checkmk-internal
-  namespace: checkmk-monitoring
+  namespace: checkmk-monitoring-streaming
   labels:
     app: checkmk-cluster-agent
 spec:
@@ -88,15 +92,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: checkmk-external
-  namespace: checkmk-monitoring
+  namespace: checkmk-monitoring-streaming
   labels:
     app: checkmk-cluster-agent
 spec:
   type: NodePort
   ports:
   - name: api
-    port: 30035
-    nodePort: 30035
+    port: 30036
+    nodePort: 30036
     targetPort: 10050
     protocol: TCP
   selector:
@@ -106,7 +110,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: checkmk-cluster-agent
-  namespace: checkmk-monitoring
+  namespace: checkmk-monitoring-streaming
   labels:
     app: checkmk-cluster-agent
 spec:
@@ -121,7 +125,7 @@ spec:
     spec:
       containers:
       - name: checkmk-cluster-agent
-        image: lisapichlertribe29/cluster_agent:0.3
+        image: wontektribe29/cluster-stream:0.33
         imagePullPolicy: Always
         env:
           - name: NODE_NAME
@@ -130,8 +134,8 @@ spec:
                 fieldPath: spec.nodeName
           - name: CMK_KEYPASS
             valueFrom:
-              configMapKeyRef:
-                name: checkmk-configmap
+              secretKeyRef:
+                name: checkmk-secret
                 key: cmk-keypass
         volumeMounts:
           - name: cmk-key
@@ -155,6 +159,7 @@ spec:
         # For http, simply remove all arguments after "/app_server/api.py"
         # NOTE: also modify scheme in liveness probe
         args: ["/app_server/api.py", "--ssl-keyfile", "/etc/ca-certificates/cmk-key.pam", "--ssl-keyfile-password", "$(CMK_KEYPASS)", "--ssl-certfile", "/etc/ca-certificates/cmk-cert.pam", "--secure-protocol"]
+#        args: ["/app_server/api.py"]
         ports:
           - containerPort: 10050
             name: api
@@ -168,32 +173,31 @@ spec:
             memory: 200Mi
       volumes:
         - name: cmk-key
-          configMap:
-            name: checkmk-configmap
+          secret:
+            secretName: checkmk-secret
             items:
               - key: cmk-key
                 path: cmk-key.pam
         - name: cmk-cert
-          configMap:
-            name: checkmk-configmap
+          secret:
+            secretName: checkmk-secret
             items:
               - key: cmk-cert
                 path: cmk-cert.pam
-
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
-    app: cadvisor
+    app: checkmk-worker-agent
   name: cadvisor
-  namespace: checkmk-monitoring
+  namespace: checkmk-monitoring-streaming
 ---
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
   labels:
-    app: cadvisor
+    app: checkmk-worker-agent
   name: cadvisor
 spec:
   allowedHostPaths:
@@ -217,7 +221,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
-    app: cadvisor
+    app: checkmk-worker-agent
   name: cadvisor
 rules:
 - apiGroups:
@@ -233,7 +237,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   labels:
-    app: cadvisor
+    app: checkmk-worker-agent
   name: cadvisor
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -242,7 +246,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: cadvisor
-  namespace: checkmk-monitoring
+  namespace: checkmk-monitoring-streaming
 ---
 apiVersion: apps/v1
 kind: DaemonSet
@@ -252,7 +256,7 @@ metadata:
   labels:
     app: checkmk-worker-agent
   name: checkmk-worker-agent
-  namespace: checkmk-monitoring
+  namespace: checkmk-monitoring-streaming
 spec:
   selector:
     matchLabels:
@@ -266,32 +270,13 @@ spec:
     spec:
       automountServiceAccountToken: false
       containers:
-      - image: lisapichlertribe29/worker_agent:0.3
+      - image: lisapichlertribe29/worker_agent:0.4
         imagePullPolicy: Always
         name: checkmk-worker-agent
         env:
-        - name: NODE_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: spec.nodeName
-        command: ["python3"]
-        # Simply remove "--secure-protocol" for http
-        args: ["/app_client/cadvisor_parser.py", "--secure-protocol"]
-        resources:
-          limits:
-            cpu: 300m
-            memory: 2000Mi
-          requests:
-            cpu: 150m
-            memory: 200Mi
-      - image: gcr.io/cadvisor/cadvisor:v0.40.0
-        name: cadvisor
-        args:
-        - --disable_metrics=tcp,udp,percpu,sched
-        ports:
-        - containerPort: 8080
-          name: http
-          protocol: TCP
+        command: ["/bin/ash"]
+        args: ["/app_client/runscript.sh", "--secure-protocol"]
+#        args: ["/app_client/runscript.sh"]
         resources:
           limits:
             cpu: 300m
@@ -315,6 +300,14 @@ spec:
         - mountPath: /dev/disk
           name: disk
           readOnly: true
+      initContainers:
+      - image: wontektribe29/worker-init:0.5
+        imagePullPolicy: Always
+        name: checkmk-worker-init-container
+        env:
+        command: ["/bin/bash"]
+        args: ["/init_container/runscript.sh", "--secure-protocol"]
+#        args: ["/init_container/runscript.sh"] # for http protocol
       serviceAccountName: cadvisor
       terminationGracePeriodSeconds: 30
       volumes:
@@ -333,4 +326,3 @@ spec:
       - hostPath:
           path: /dev/disk
         name: disk
-

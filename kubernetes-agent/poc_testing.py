@@ -1,27 +1,49 @@
+#!/usr/bin/env python3
+
 import json
 import pprint
+import sys
+from typing import List
+
 import requests
+import argparse
 
-node_ip = ""  # kubectl get nodes -o wide (node ip address)
-service_port = "30036"  # kubectl get services -A (service checkkmk-external port)
 
-resp = requests.get(
-    f"https://{node_ip}:{service_port}/cadvisor_container_metrics",
-    verify=False
-)
-if resp.status_code == 200:
-    result = {}
-    with open("checkmk_k8_raw", "w") as raw_file:
-        raw_file.write(resp.content.decode("utf-8"))
+def parse_arguments(args: List[str]) -> argparse.Namespace:
+    p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument("--node-ip", required=True, help="IP address of one the k8 worker nodes (kubectl get nodes -o wide)")
+    p.add_argument("--service-port", type=int, default=30036, help="Port of the checkmk-external service (kubectl get services -A)")
+    arguments = p.parse_args(args)
+    return arguments
 
-    containers = [container for container in json.loads(resp.content)]
-    containers_len = len(containers)
-    for raw_container in containers:
-        name, *metrics = raw_container.split(" ")
-        result[name.replace("cName=", "")] = {metric: value for metric, value in (s.split("=") for s in metrics)}
 
-    with open("checkmk_k8.json", "w") as file:
-        file.write(json.dumps(result))
-else:
-    raise RuntimeError(pprint.pformat(resp.json()))
+def query_metrics(node_ip: str, service_port: int):
+    print("hello")
+    resp = requests.get(
+        f"https://{node_ip}:{service_port}/cadvisor_container_metrics",
+        verify=False
+    )
+    if resp.status_code == 200:
+        result = {}
+        with open("/tmp/checkmk_k8_raw", "w") as raw_file:
+            raw_file.write(resp.content.decode("utf-8"))
 
+        containers = [container for container in json.loads(resp.content)]
+        for raw_container in containers:
+            name, *metrics = raw_container.split(" ")
+            result[name.replace("cName=", "")] = {metric: value for metric, value in (s.split("=") for s in metrics)}
+
+        with open("/tmp/checkmk_k8.json", "w") as file:
+            file.write(json.dumps(result))
+    else:
+        raise RuntimeError(pprint.pformat(resp.json()))
+
+
+def main():
+    args = sys.argv[1:]
+    arguments = parse_arguments(args)
+    query_metrics(arguments.node_ip, arguments.service_port)
+
+
+if __name__ == "__main__":
+    main()

@@ -2,7 +2,7 @@ import json
 import pprint
 import requests
 
-node_ip = "10.200.3.21"  # kubectl get nodes -o wide (node ip address)
+node_ip = ""  # kubectl get nodes -o wide (node ip address)
 service_port = "30036"  # kubectl get services -A (service checkkmk-external port)
 
 resp = requests.get(

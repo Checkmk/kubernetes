@@ -35,7 +35,7 @@ information:
 
 
 * **Worker Node IP**: using `kubectl get nodes -o wide` retrieve the ip of one of the worker nodes
-* **Service Port**: using `kubectl get services -A` retrieve the port of service `checkmk-external` (usually this is 30035)
+* **Service Port**: using `kubectl get services -A` retrieve the port of service `checkmk-external` (usually this is 30036)
 
 
 In the Kubernetes 2.0 Datasource Rule there will be relevant fields under the cluster agent section (this is yet under development)

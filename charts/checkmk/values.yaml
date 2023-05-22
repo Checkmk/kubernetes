@@ -1,0 +1,155 @@
+# Default values for checkmk.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Replica count. >1 not supported
+replicaCount: 1 # >1 not supported
+
+image:
+  #repository: registry.checkmk.com/enterprise/check-mk-enterprise # <- Use this for Checkmk Enterprise
+  # -- Checkmk image. Use `registry.checkmk.com/enterprise/check-mk-enterprise` for Checkmk Enterprise
+  repository: checkmk/check-mk-raw
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+
+
+# -- Checkmk image pull secrets
+imagePullSecrets: []
+  # - name: regcred
+  #  ^
+  #  |-> This is the name of the secret that contains the credentials to the private registry
+# -- Helm chart release name override
+nameOverride: ""
+# -- Helm chart full name override
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  # -- Whether to create a service account
+  create: true
+  # Annotations to add to the service account
+  # -- Service account annotations
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  # -- Service account name
+  name: ""
+
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+
+service:
+  http:
+    # -- Service port to expose the HTTP service on. Override this per site in the `sites` list section
+    port: 80
+    # -- Service type to expose the HTTP service on
+    type: ClusterIP
+    # -- Service protocol to expose the HTTP service on
+    protocol: TCP
+    # -- HTTP port in Checkmk containers
+    targetPort: 5000
+  livestatus:
+    # -- Service port to expose the livestatus service on. Override this per site in the `sites` list section
+    port: 6557
+    # -- Service type to expose the livestatus service on. Set this to LoadBalancer if you want to expose the livestatus port on the host
+    type: ClusterIP # <- Set this to LoadBalancer if you want to expose the livestatus port on the host.
+    # -- Service protocol to expose the livestatus service on
+    protocol: TCP
+    # -- Livestatus port in Checkmk containers
+    targetPort: 6557
+  tls:
+    # -- Service port to expose the TLS registration service on. Override this per site in the `sites` list section
+    port: 8000
+    # -- Service type to expose the TLS registration service on. Set this to LoadBalancer if you want to expose the TLS registration port on the host
+    type: ClusterIP # <- Set this to LoadBalancer if you want to expose the TLS registration port on the host.
+    # -- Service protocol to expose the TLS registration service on
+    protocol: TCP
+    # -- TLS registration port in Checkmk containers
+    targetPort: 8000
+
+ingress:
+  # -- Enable ingress
+  enabled: false # <- Set to true to enable ingress
+  # -- Ingress class name
+  className: ""
+  # -- Ingress annotations
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx # <- Specify ingress class here
+    # kubernetes.io/tls-acme: "true"
+  # -- Ingress host. Paths will be generated for every site
+  hosts:
+    - host: ""
+      # Will use subpaths for each site
+  # -- Ingress TLS configuration
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  # -- Enable autoscaling. Not supported
+  enabled: false # Not supported
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+# -- Node labels for pod assignment
+nodeSelector: {}
+
+# -- Tolerations for pod assignment
+tolerations: []
+
+# -- Affinity for pod assignment
+affinity: {}
+
+sites:
+  - name: "checkmk"
+    # sites[0].name -- Checkmk site name
+    # -- (string) Checkmk site password as plain text
+    password:
+    # -- Secret containing password in "password" field
+    passwordSecret: "checkmk-password" # <- Use "password" key in secret
+    # -- (string) Checkmk version override for this site
+    versionOverride: # <- Override version from Chart.yaml specifcally for this site
+    # -- (int) Checkmk HTTP port override for this site
+    httpPortOverride: # <- override external port, port in container is always 5000
+    # -- (int) Checkmk livestatus port override for this site. Needs to be set for multiple sites
+    liveStatusPortOverride: # <- override external port, port in container is always 6557
+    # -- (int) Checkmk TLS port override for this site. Needs to be set for multiple sites
+    tlsPortOverride: # <- override external port, port in container is always 8000
+    persistentVolume:
+      # -- Enable persistent storage for this site
+      enabled: false # <- Set to true to enable persistent storage
+      # -- Persistent volume size
+      size: 10Gi # <- Size of persistent volume claim
+      # -- Persistent volume storage class
+      storageClass: "" # <- Storage class of persistent volume claim. Make sure to specify this to maintain synced status in ArgoCD
+      # -- Persistent volume access mode
+      accessMode: ReadWriteOnce # <- Access mode of persistent volume claim
+      # -- (string) Use an existing PVC to persist data
+      existingClaim: # <- Use an existing PVC to persist data

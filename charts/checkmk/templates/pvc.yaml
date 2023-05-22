@@ -1,0 +1,19 @@
+{{- range $site := .Values.sites }}
+{{- if .persistentVolume.enabled }}
+{{- if not .persistentVolume.existingClaim }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "checkmk.fullname" $ }}-{{ regexReplaceAll "[_\\W]+" $site.name "-" }}
+spec:
+  storageClassName: {{ $site.persistentVolume.storageClass }}
+  resources:
+    requests:
+      # Rather size larger for production environments
+      storage: {{ $site.persistentVolume.size }}
+  accessModes:
+    - {{ $site.persistentVolume.accessMode }}
+---
+{{- end }}
+{{- end }}
+{{- end }}

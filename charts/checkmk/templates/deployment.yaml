@@ -1,0 +1,98 @@
+{{- range $site := .Values.sites }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "checkmk.fullname" $ }}-{{ regexReplaceAll "[_\\W]+" $site.name "-" }}
+  labels:
+    {{- include "checkmk.labels" $ | nindent 4 }}
+spec:
+  {{- if not $.Values.autoscaling.enabled }}
+  replicas: {{ $.Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "checkmk.selectorLabels" $ | nindent 6 }}
+  template:
+    metadata:
+      {{- with $.Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "checkmk.selectorLabels" $ | nindent 8 }}
+        app.kubernetes.io/checkmk-site: {{ $site.name }}
+    spec:
+      {{- with $.Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "checkmk.serviceAccountName" $ }}
+      securityContext:
+        {{- toYaml $.Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ regexReplaceAll "[_\\W]+" $site.name "-" }}
+          securityContext:
+            {{- toYaml $.Values.securityContext | nindent 12 }}
+          image: "{{ $.Values.image.repository }}:{{ $site.versionOverride | default $.Chart.AppVersion }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ $.Values.service.http.targetPort }}
+              protocol: TCP
+            - name: livestatus
+              containerPort: {{ $.Values.service.livestatus.targetPort }}
+              protocol: TCP
+            - name: tls
+              containerPort: {{ $.Values.service.tls.targetPort }}
+              protocol: TCP
+          resources:
+            {{- toYaml $.Values.resources | nindent 12 }}
+          env:
+            - name: CMK_SITE_ID
+              value: {{ $site.name }}
+            - name: CMK_PASSWORD
+              {{- if .password }}
+              value: {{ .password }}
+              {{- else if .passwordSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .passwordSecret }}
+                  key: password
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "checkmk.fullname" $ }}
+                  key: {{ regexReplaceAll "[_\\W]+" $site.name "-" }}
+              {{- end }}
+            - name: CMK_LIVESTATUS_TCP
+              value: "on"
+          volumeMounts:
+            - name: {{ template "checkmk.fullname" $ }}-{{ regexReplaceAll "[_\\W]+" $site.name "-" }}
+              mountPath: /omd/sites/
+      restartPolicy: Always
+      {{- with $.Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - name: {{ template "checkmk.fullname" $ }}-{{ regexReplaceAll "[_\\W]+" $site.name "-" }}
+        {{- if .persistentVolume.enabled }}
+        persistentVolumeClaim:
+          {{- if .persistentVolume.existingClaim }}
+          claimName: {{ $site.persistentVolume.existingClaim }}
+          {{- else }}
+          claimName: {{ template "checkmk.fullname" $ }}-{{ regexReplaceAll "[_\\W]+" $site.name "-" }}
+          {{- end }}
+        {{- else }}
+        emptyDir: {}
+        {{- end }}
+---
+{{- end }}

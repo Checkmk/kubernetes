@@ -1,0 +1,40 @@
+ingress:
+  enabled: true
+  className: ""
+  hosts:
+    - host: ""
+
+service:
+  http:
+    port: 80 # <- Cluster port for the Checkmk server
+    type: ClusterIP # <- Since this has an Ingress we don't need a LoadBalancer
+    protocol: TCP
+    targetPort: 5000 # <- This is the port the Checkmk server listens on in the container
+  livestatus:
+    port: 6557
+    type: LoadBalancer # <- Setting this to LoadBalancer automatically creates iptables forwards in K3S
+    protocol: TCP
+    targetPort: 6557
+  tls:
+    port: 8000
+    type: LoadBalancer # <- Setting this to LoadBalancer automatically creates iptables forwards in K3S
+    protocol: TCP
+    targetPort: 8000
+
+sites:
+  - name: "site_name"
+    password: "checkmk-password"
+    persistentVolume:
+      enabled: true
+      size: 10Gi
+      accessMode: ReadWriteOnce
+      # storageClass: "local-path"
+  - name: "second_site"
+    password: "checkmk-password"
+    liveStatusPortOverride: 6558 # Overrides the external port for the livestatus service since 6557 is already in use
+    tlsPortOverride: 8001 # Overrides the external port for the TLS registration service since 8000 is already in use
+    persistentVolume:
+      enabled: true
+      size: 10Gi
+      accessMode: ReadWriteOnce
+      # storageClass: "local-path"
